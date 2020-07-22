@@ -1,0 +1,22 @@
+# frozen_string_literal: true
+
+class CreateTagsAndTaggings < ActiveRecord::Migration<%= migration_version %>
+  def change
+    create_table :tags do |t|
+      t.string :name, null: false
+      t.string :type, null: false
+      t.index %i[name type], unique: true
+      t.integer :taggings_count, null: false
+      t.timestamps
+    end
+
+    create_table :taggings do |t|
+      t.belongs_to :tag, foreign_key: true, null: false
+      t.belongs_to :taggable, polymorphic: true, null: false
+      t.string :attachment, null: false
+      t.index %i[tag_id attachment taggable_id taggable_type],
+              name: 'index_taggings_on_unique_tag_attachment', unique: true
+      t.timestamps
+    end
+  end
+end
