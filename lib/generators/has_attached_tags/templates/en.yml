@@ -1,0 +1,9 @@
+---
+en:
+  activerecord:
+    errors:
+      models:
+        has_attached_tags/tagging:
+          attributes:
+            tag:
+              unsupported: is unsupported (should be %{type})

@@ -18,6 +18,12 @@ RSpec.shared_examples_for 'has_one_tag' do |attachment, type: attachment.to_s.si
     expect(subject).to be_invalid
   end
 
+  it 'produces the correct error message when an unsupported tag is assigned' do
+    subject.send("#{attachment}=", create(:tag))
+    subject.validate
+    expect(subject.errors[:"#{attachment}_tagging.tag"]).to include("is unsupported (should be #{type})")
+  end
+
   describe ".with_#{attachment}" do
     subject(:with_attachment) { described_class.send("with_#{attachment}", tag) }
 

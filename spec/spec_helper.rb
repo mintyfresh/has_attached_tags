@@ -9,6 +9,8 @@ require 'faker'
 require_relative 'support/database'
 require_relative 'support/image'
 
+I18n.load_path += [File.expand_path('../lib/generators/has_attached_tags/templates/en.yml', __dir__)]
+
 RSpec.configure do |config|
   config.include FactoryBot::Syntax::Methods
 

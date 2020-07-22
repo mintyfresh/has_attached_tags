@@ -10,10 +10,10 @@ module HasAttachedTags
     INPUT_FILE  = 'migration.rb.erb'
     OUTPUT_FILE = 'db/migrate/create_tags_and_taggings.rb'
 
-    source_root File.expand_path('templates', __dir__)
     desc 'Creates the has_attached_tags migration file.'
+    source_root File.expand_path('templates', __dir__)
 
-    def install
+    def migration
       migration_template(INPUT_FILE, OUTPUT_FILE, migration_version: migration_version)
     end
 

@@ -53,8 +53,7 @@ private
   def define_attachment_tagging_class(attachment, type)
     const_set("#{attachment}_tagging".camelize, Class.new(Tagging) do
       validate do
-        errors.add(:tag, :incorrect_type)     if tag && tag.type != type.to_s
-        errors.add(:attachment, :unsupported) if self.attachment != attachment.to_s
+        errors.add(:tag, :unsupported, type: type) if tag && tag.type != type.to_s
       end
     end)
   end
@@ -69,6 +68,7 @@ private
         .arel.exists
     }
 
+    # WHERE EXISTS (...) queries are used to prevent duplication of rows.
     scope(:"with_#{attachment}",    -> (tag) { where(taggings_exists.call(tag))     })
     scope(:"without_#{attachment}", -> (tag) { where.not(taggings_exists.call(tag)) })
   end
