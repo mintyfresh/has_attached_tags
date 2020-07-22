@@ -1,8 +1,75 @@
 # frozen_string_literal: true
 
+require 'active_record'
+
 require 'has_attached_tags/version'
+require 'has_attached_tags/tag'
+require 'has_attached_tags/tagging'
 
 module HasAttachedTags
-  class Error < StandardError; end
-  # Your code goes here...
+  # @param attachment [Symbol]
+  # @param type [String]
+  # @param required [Boolean]
+  # @return [void]
+  def has_one_tag(attachment, type: default_type_for_attachment(attachment), required: false) # rubocop:disable Naming/PredicateName
+    klass = define_attachment_tagging_class(attachment, type)
+
+    has_one(:"#{attachment}_tagging", -> { where(attachment: attachment) },
+            as: :taggable, autosave: true, class_name: klass.name, dependent: :destroy, inverse_of: :taggable)
+    has_one(attachment, -> { of_type(type) }, source: :tag, through: :"#{attachment}_tagging")
+
+    validates(attachment, presence: true) if required
+
+    define_attachment_scopes(attachment)
+  end
+
+  # @param attachment [Symbol]
+  # @param type [String]
+  # @param required [Boolean]
+  # @return [void]
+  def has_many_tags(attachment, type: default_type_for_attachment(attachment), required: false) # rubocop:disable Naming/PredicateName
+    klass = define_attachment_tagging_class(attachment, type)
+
+    has_many(:"#{attachment}_taggings", -> { where(attachment: attachment) },
+             as: :taggable, autosave: true, class_name: klass.name, dependent: :destroy, inverse_of: :taggable)
+    has_many(attachment, -> { of_type(type) }, source: :tag, through: :"#{attachment}_taggings")
+
+    validates(attachment, presence: true) if required
+
+    define_attachment_scopes(attachment)
+  end
+
+private
+
+  # @param attachment [Symbol]
+  # @return [String]
+  def default_type_for_attachment(attachent)
+    attachent.to_s.singularize
+  end
+
+  # @param attachment [Symbol]
+  # @param type [String]
+  # @return [Class<Tagging>]
+  def define_attachment_tagging_class(attachment, type)
+    const_set("#{attachment}_tagging".camelize, Class.new(Tagging) do
+      validate do
+        errors.add(:tag, :incorrect_type)     if tag && tag.type != type.to_s
+        errors.add(:attachment, :unsupported) if self.attachment != attachment.to_s
+      end
+    end)
+  end
+
+  # @param attachment [Symbol]
+  # @return [void]
+  def define_attachment_scopes(attachment)
+    taggings_exists = lambda { |tag|
+      Tagging
+        .where(tag: tag, attachment: attachment, taggable_type: polymorphic_name)
+        .where(Tagging.arel_table[:taggable_id].eq(arel_table[:id]))
+        .arel.exists
+    }
+
+    scope(:"with_#{attachment}",    -> (tag) { where(taggings_exists.call(tag))     })
+    scope(:"without_#{attachment}", -> (tag) { where.not(taggings_exists.call(tag)) })
+  end
 end
