@@ -9,6 +9,7 @@ module HasAttachedTags
 
     def install
       copy_file('en.yml', 'config/locales/has_attached_tags.en.yml')
+      copy_file('has_attached_tags.rb', 'config/initializers/has_attached_tags.rb')
     end
   end
 end
