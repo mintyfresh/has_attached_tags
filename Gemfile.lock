@@ -2,6 +2,7 @@ PATH
   remote: .
   specs:
     has_attached_tags (0.1.0)
+      activerecord (>= 5.1, < 7)
 
 GEM
   remote: https://rubygems.org/
@@ -74,7 +75,6 @@ PLATFORMS
   ruby
 
 DEPENDENCIES
-  activerecord (~> 6)
   bundler (~> 2.0)
   factory_bot (~> 6.1)
   faker (~> 2, >= 2.13)
