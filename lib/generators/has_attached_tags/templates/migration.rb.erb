@@ -6,7 +6,7 @@ class CreateTagsAndTaggings < ActiveRecord::Migration<%= migration_version %>
       t.string :name, null: false
       t.string :type, null: false
       t.index %i[name type], unique: true
-      t.integer :taggings_count, null: false
+      t.integer :taggings_count, null: false, default: 0
       t.timestamps
     end
 
