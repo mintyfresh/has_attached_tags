@@ -7,7 +7,7 @@ HasAttachedTags does:
 * Allow a model to have multiple, separate lists of tags
 * Allow a model to specify only a single tag, rather than a list
 * Allow a model to have multiple lists of the same kind of tag (e.g. A user preferences object with an allow-list and a block-list of tags.)
-* Uses only run-of-the-mill ActiveRecord models and associations, without introducing any new infrastructural types.
+* Use only run-of-the-mill ActiveRecord models and associations, without introducing any new infrastructural types.
 
 HasAttachedTags does not:
 * Parse tags from comma-separate lists
