@@ -11,7 +11,7 @@ Gem::Specification.new do |spec|
   spec.email         = ['mihail@platterz.ca']
 
   spec.summary       = 'Pluggable Tagging for ActiveRecord'
-  spec.description   = 'Add general purpose, typed tagging system for ActiveRecord'
+  spec.description   = 'A general purpose, typed tagging system for ActiveRecord'
   spec.homepage      = 'https://github.com/Mihail-K/has_attached_tags'
   spec.license       = 'MIT'
 
