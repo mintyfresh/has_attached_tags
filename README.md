@@ -41,6 +41,24 @@ To generate the database migration:
 
     $ rails g has_attached_tags:migration
 
+### Namespacing
+
+By default, HasAttachedTags with map its `Tag` and `Tagging` models into the local application's top-level scope for easy access.
+This simplifies operations like:
+```ruby
+# Fully-qualified access:
+tag = HasAttachedTags::Tag.of_type('place').find_or_create_by(name: 'Home')
+
+# Simplified access:
+tag = Tag.of_type('place').find_or_create_by(name: 'Home')
+```
+
+If this naming conflicts with existing types in your application, or you simply do not want this behaviour, remove these lines from `config/initializers/has_attached_tags.rb`:
+```ruby
+Tag     = HasAttachedTags::Tag
+Tagging = HasAttachedTags::Tagging
+```
+
 ## Usage
 
 In most cases, it's simplest to install HasAttachedTags globally by adding it to the `ApplicationRecord` base class:
