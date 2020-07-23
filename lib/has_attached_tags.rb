@@ -7,6 +7,13 @@ require 'has_attached_tags/tag'
 require 'has_attached_tags/tagging'
 
 module HasAttachedTags
+  TAGGINGS_EXISTS = lambda { |tag, attachment, taggable|
+    Tagging
+      .where(tag: tag, attachment: attachment, taggable_type: taggable.polymorphic_name)
+      .where(Tagging.arel_table[:taggable_id].eq(taggable.arel_table[:id]))
+      .arel.exists
+  }
+
   # @param attachment [Symbol]
   # @param type [String]
   # @param required [Boolean]
@@ -61,15 +68,8 @@ private
   # @param attachment [Symbol]
   # @return [void]
   def define_attachment_scopes(attachment)
-    taggings_exists = lambda { |tag|
-      Tagging
-        .where(tag: tag, attachment: attachment, taggable_type: polymorphic_name)
-        .where(Tagging.arel_table[:taggable_id].eq(arel_table[:id]))
-        .arel.exists
-    }
-
     # WHERE EXISTS (...) queries are used to prevent duplication of rows.
-    scope(:"with_#{attachment}",    -> (tag) { where(taggings_exists.call(tag))     })
-    scope(:"without_#{attachment}", -> (tag) { where.not(taggings_exists.call(tag)) })
+    scope(:"with_#{attachment}",    -> (tag) { where(TAGGINGS_EXISTS.call(tag, attachment, self))     })
+    scope(:"without_#{attachment}", -> (tag) { where.not(TAGGINGS_EXISTS.call(tag, attachment, self)) })
   end
 end
