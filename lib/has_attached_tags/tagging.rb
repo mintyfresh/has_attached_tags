@@ -9,5 +9,13 @@ module HasAttachedTags
 
     validates :attachment, presence: true
     validates :tag, uniqueness: { scope: %i[attachment taggable], on: :create }
+
+    # @param type [String]
+    # @return [void]
+    def self.[](type:)
+      Class.new(self) do
+        validate { errors.add(:tag, :unsupported, type: type) if tag && tag.type != type }
+      end
+    end
   end
 end

@@ -58,11 +58,7 @@ private
   # @param type [String]
   # @return [Class<Tagging>]
   def define_attachment_tagging_class(attachment, type)
-    const_set("#{attachment}_tagging".camelize, Class.new(Tagging) do
-      validate do
-        errors.add(:tag, :unsupported, type: type) if tag && tag.type != type.to_s
-      end
-    end)
+    const_set("#{attachment}_tagging".camelize, Tagging[type: type.to_s])
   end
 
   # @param attachment [Symbol]
