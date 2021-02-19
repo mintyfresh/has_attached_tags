@@ -8,11 +8,11 @@ Gem::Specification.new do |spec|
   spec.name          = 'has_attached_tags'
   spec.version       = HasAttachedTags::VERSION
   spec.authors       = ['Mihail K']
-  spec.email         = ['mihail@platterz.ca']
+  spec.email         = ['7896757+mintyfresh@users.noreply.github.com']
 
   spec.summary       = 'Pluggable Tagging for ActiveRecord'
   spec.description   = 'A general purpose, typed tagging system for ActiveRecord'
-  spec.homepage      = 'https://github.com/Mihail-K/has_attached_tags'
+  spec.homepage      = 'https://github.com/mintyfresh/has_attached_tags'
   spec.license       = 'MIT'
 
   spec.metadata['homepage_uri']    = spec.homepage
