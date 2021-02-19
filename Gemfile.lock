@@ -1,7 +1,7 @@
 PATH
   remote: .
   specs:
-    has_attached_tags (0.1.0)
+    has_attached_tags (0.1.1)
       activerecord (>= 5.1, < 7)
 
 GEM
